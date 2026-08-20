@@ -178,13 +178,14 @@ export async function processamento_getDashboard(input: { productId?: number; fr
 export async function processamento_allocateInfrastructureTransaction(transactionId: number) {
   const db = await getDb();
   if (!db) throw new Error("Banco de dados indisponível");
-  const [row] = await db.select({ transaction: transactions, centerKind: costCenters.kind }).from(transactions).leftJoin(costCenters, eq(costCenters.id, transactions.costCenterId)).where(eq(transactions.id, transactionId)).limit(1);
+  const [row] = await db.select({ transaction: transactions, centerKind: costCenters.kind, sharedBaseMonthlyCost: products.sharedBaseMonthlyCost }).from(transactions).leftJoin(costCenters, eq(costCenters.id, transactions.costCenterId)).leftJoin(products, eq(products.id, transactions.productId)).where(eq(transactions.id, transactionId)).limit(1);
   if (!row || row.transaction.type !== "expense" || !row.transaction.productId || row.centerKind !== "cogs") return { allocated: false, reason: "Lançamento não elegível para rateio" };
   const existing = await db.select({ id: infrastructureAllocations.id }).from(infrastructureAllocations).where(eq(infrastructureAllocations.transactionId, transactionId)).limit(1);
   if (existing.length) return { allocated: false, reason: "Rateio já realizado" };
   const active = await db.select({ licenseId: licenses.id, contractId: licenses.contractId, customerId: contracts.customerId }).from(licenses).innerJoin(contracts, eq(contracts.id, licenses.contractId)).where(and(eq(licenses.status, "active" as const), eq(contracts.productId, row.transaction.productId), eq(contracts.status, "active" as const)));
   if (!active.length) return { allocated: false, reason: "Nenhuma licença ativa para o produto" };
-  const total = Number(row.transaction.amount);
+  const configuredSharedBase = row.transaction.category === "infraestrutura compartilhada" ? Number(row.sharedBaseMonthlyCost ?? 0) : 0;
+  const total = Number(row.transaction.amount) + configuredSharedBase;
   const direct = row.transaction.customerId ? active.filter(item => item.customerId === row.transaction.customerId).slice(0, 1) : [];
   const targets = direct.length ? direct : active;
   const method = direct.length ? "direct" as const : "active_license_count" as const;

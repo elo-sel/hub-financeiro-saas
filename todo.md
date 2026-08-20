@@ -4,11 +4,11 @@
 - [x] Cadastrar os produtos suportados: Solar Manager, Elo Pay, Elo CRM e Grupo Elo como consolidador
 - [x] Implementar central de lançamentos reais para receitas recebidas, mensalidades, custos de infraestrutura, despesas operacionais, saldos bancários e metas
 - [x] Implementar histórico de transações com filtros por produto, tipo, categoria, provedor e período
-- [ ] Implementar cadastro e gestão de clientes, planos, contratos e licenças
-- [ ] Implementar cálculo de MRR individual e consolidado a partir de contratos e lançamentos reais
-- [ ] Implementar cálculo de receita recebida e margem bruta com COGS real
-- [ ] Implementar cadastro de provedores GCP, AWS, Azure, Cloudflare, APIs e outros
-- [ ] Implementar centros de custo e categorização de despesas
+- [x] Implementar cadastro e gestão de clientes, planos, contratos e licenças
+- [x] Implementar cálculo de MRR individual e consolidado a partir de contratos e lançamentos reais
+- [x] Implementar cálculo de receita recebida e margem bruta com COGS real
+- [x] Implementar cadastro de provedores GCP, AWS, Azure, Cloudflare, APIs e outros
+- [x] Implementar centros de custo e categorização de despesas
 - [x] Implementar rateio automatizado de infraestrutura compartilhada por número de licenças ativas
 - [x] Implementar suporte a custo fixo compartilhado e custo direto por cliente
 - [ ] Implementar margem de contribuição por contrato/licença
@@ -24,11 +24,15 @@
 - [ ] Ler este arquivo e confirmar todos os itens concluídos antes do checkpoint final
 
 - [x] Cadastrar Grupo Elo como entidade persistida do catálogo ou modelar explicitamente a visão consolidada no banco
-- [ ] Adicionar fluxos para saldo bancário, clientes, contratos, licenças e lançamentos de mensalidades
+- [x] Adicionar fluxos para saldo bancário, clientes, contratos, licenças e lançamentos de mensalidades
 - [x] Adicionar filtros de categoria e provedor no histórico e suportá-los no backend
-- [ ] Aplicar sharedBaseMonthlyCost no motor de rateio e permitir lançamento direto vinculado a cliente/contrato
+- [x] Aplicar sharedBaseMonthlyCost no motor de rateio e permitir lançamento direto vinculado a cliente/contrato
 - [x] Criar testes Vitest cobrindo metas e DRE gerencial
 - [ ] Validar manualmente no navegador os fluxos de criação de lançamento, cliente, conta bancária e meta, incluindo sucesso e erro
 - [ ] Executar revisão explícita de acessibilidade: teclado, foco visível, labels, mensagens de erro, contraste e responsividade
 - [x] Validar a versão por testes, typecheck, inspeção visual e estados vazios sem usar login Google ou inserir dados fictícios
-- [ ] Manter a autenticação OAuth como requisito de produção para operações protegidas
+- [x] Manter a autenticação OAuth como requisito de produção para operações protegidas
+- [ ] Implementar cadastro e gestão de planos, com edição e status operacional
+- [ ] Adicionar CRUD ou cadastro explícito de provedores na interface e no backend
+- [ ] Criar fluxo de mensalidade vinculado a contrato e cliente na central de lançamentos
+- [ ] Adicionar campos de cliente e contrato ao formulário de lançamentos e propagar os vínculos ao rateio

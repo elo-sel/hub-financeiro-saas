@@ -32,6 +32,7 @@ const menuItems = [
   { icon: FilePlus2, label: "Central de lançamentos", path: "/lancamentos" },
   { icon: Target, label: "Cockpit de metas", path: "/metas" },
   { icon: UserPlus, label: "Cadastros operacionais", path: "/cadastro" },
+  { icon: Settings2, label: "Contratos e licenças", path: "/contratos" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
