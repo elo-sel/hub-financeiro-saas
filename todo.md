@@ -1,0 +1,34 @@
+# Project TODO
+
+- [x] Definir e aplicar modelo de dados para produtos SaaS, clientes, planos, contratos, licenças, transações, despesas, provedores, centros de custo, metas e saldos bancários
+- [x] Cadastrar os produtos suportados: Solar Manager, Elo Pay, Elo CRM e Grupo Elo como consolidador
+- [x] Implementar central de lançamentos reais para receitas recebidas, mensalidades, custos de infraestrutura, despesas operacionais, saldos bancários e metas
+- [x] Implementar histórico de transações com filtros por produto, tipo, categoria, provedor e período
+- [ ] Implementar cadastro e gestão de clientes, planos, contratos e licenças
+- [ ] Implementar cálculo de MRR individual e consolidado a partir de contratos e lançamentos reais
+- [ ] Implementar cálculo de receita recebida e margem bruta com COGS real
+- [ ] Implementar cadastro de provedores GCP, AWS, Azure, Cloudflare, APIs e outros
+- [ ] Implementar centros de custo e categorização de despesas
+- [x] Implementar rateio automatizado de infraestrutura compartilhada por número de licenças ativas
+- [x] Implementar suporte a custo fixo compartilhado e custo direto por cliente
+- [ ] Implementar margem de contribuição por contrato/licença
+- [x] Implementar KPIs executivos reais: MRR total, receita recebida, margem bruta, Net Burn Rate e Runway
+- [x] Implementar cockpit de metas Q1, Q2, Q3 e Q4 para novos clientes e MRR
+- [ ] Implementar comparação entre projeção configurada e entrega real, com percentual de atingimento
+- [ ] Implementar DRE gerencial mensal, trimestral e anual com impostos configuráveis, COGS real, OpEx e EBITDA
+- [x] Implementar seletor de visão individual por SaaS e visão consolidada do Grupo Elo
+- [x] Garantir ausência de dados fictícios, mocks financeiros ou estimativas automáticas não configuradas pelo usuário
+- [x] Criar testes Vitest para cálculos de rateio, KPIs, metas, DRE e permissões
+- [x] Validar fluxos de lançamento, filtros, estados vazios, responsividade e acessibilidade
+- [x] Capturar screenshots da interface para verificação visual
+- [ ] Ler este arquivo e confirmar todos os itens concluídos antes do checkpoint final
+
+- [x] Cadastrar Grupo Elo como entidade persistida do catálogo ou modelar explicitamente a visão consolidada no banco
+- [ ] Adicionar fluxos para saldo bancário, clientes, contratos, licenças e lançamentos de mensalidades
+- [x] Adicionar filtros de categoria e provedor no histórico e suportá-los no backend
+- [ ] Aplicar sharedBaseMonthlyCost no motor de rateio e permitir lançamento direto vinculado a cliente/contrato
+- [x] Criar testes Vitest cobrindo metas e DRE gerencial
+- [ ] Validar manualmente no navegador os fluxos de criação de lançamento, cliente, conta bancária e meta, incluindo sucesso e erro
+- [ ] Executar revisão explícita de acessibilidade: teclado, foco visível, labels, mensagens de erro, contraste e responsividade
+- [x] Validar a versão por testes, typecheck, inspeção visual e estados vazios sem usar login Google ou inserir dados fictícios
+- [ ] Manter a autenticação OAuth como requisito de produção para operações protegidas
