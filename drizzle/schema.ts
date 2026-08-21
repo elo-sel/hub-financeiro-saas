@@ -143,6 +143,10 @@ export const invoices = mysqlTable("financial_invoices", {
   recipientDocument: varchar("recipientDocument", { length: 30 }),
   status: mysqlEnum("status", ["issued", "cancelled", "pending"]).default("issued").notNull(),
   notes: text("notes"),
+  fileKey: varchar("fileKey", { length: 255 }),
+  fileName: varchar("fileName", { length: 255 }),
+  fileSize: int("fileSize"),
+  fileContentType: varchar("fileContentType", { length: 100 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, table => ({ transactionIdx: index("invoices_transaction_idx").on(table.transactionId), accessKeyIdx: uniqueIndex("invoices_access_key_idx").on(table.accessKey) }));

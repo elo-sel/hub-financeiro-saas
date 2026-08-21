@@ -71,3 +71,10 @@
 - [x] Validar dados, tema, vínculos e responsividade com typecheck, 11 testes e screenshots desktop/mobile
 
 - [x] Criar guia técnico completo de execução local, arquitetura atual e backend Node.js com Firebase
+
+- [ ] Implementar upload seguro de PDF de nota fiscal para o storage
+- [ ] Persistir metadados e caminho do PDF no vínculo da nota fiscal
+- [ ] Adicionar botão de visualização rápida do PDF com URL temporária autorizada
+- [ ] Validar MIME type, extensão, tamanho, permissões e erros do upload
+- [ ] Criar testes Vitest para validação e vínculo do arquivo fiscal
+- [ ] Verificar repositório GitHub de destino e enviar o projeto atualizado
