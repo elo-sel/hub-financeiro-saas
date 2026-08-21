@@ -59,3 +59,10 @@ export function processamento_rankCustomerProfitability(rows: processamento_Cust
   const result = Array.from(grouped.values());
   return { top: [...result].sort((a, b) => b.contribution - a.contribution).slice(0, 5), bottom: [...result].sort((a, b) => (a.marginPercent ?? -Infinity) - (b.marginPercent ?? -Infinity)).slice(0, 5) };
 }
+
+export function processamento_validateInvoicePdf(input: { fileName: string; fileSize: number; contentType: string; signature: string }) {
+  if (input.contentType !== "application/pdf" || !input.fileName.toLowerCase().endsWith(".pdf")) throw new Error("Envie um arquivo PDF válido");
+  if (input.fileSize <= 0 || input.fileSize > 10 * 1024 * 1024) throw new Error("O PDF deve ter até 10 MB");
+  if (input.signature !== "%PDF") throw new Error("O conteúdo do arquivo não corresponde a um PDF válido");
+  return true;
+}

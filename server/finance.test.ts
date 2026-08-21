@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows, processamento_rankCustomerProfitability } from "../shared/finance";
+import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows, processamento_rankCustomerProfitability, processamento_validateInvoicePdf } from "../shared/finance";
 
 describe("financeiro: rateio e KPIs", () => {
   it("rateia o custo total entre licenças ativas preservando o total", () => {
@@ -39,6 +39,13 @@ describe("financeiro: rateio e KPIs", () => {
     expect(result.top[0]).toMatchObject({ customerId: 1, revenue: 1500, cogs: 300, contribution: 1200, marginPercent: 80 });
     expect(result.top).toHaveLength(2);
     expect(result.bottom[0]).toMatchObject({ customerId: 2, marginPercent: 10 });
+  });
+
+  it("valida PDFs fiscais e rejeita arquivos inválidos", () => {
+    expect(processamento_validateInvoicePdf({ fileName: "nota.pdf", fileSize: 1024, contentType: "application/pdf", signature: "%PDF" })).toBe(true);
+    expect(() => processamento_validateInvoicePdf({ fileName: "nota.txt", fileSize: 1024, contentType: "text/plain", signature: "text" })).toThrow("PDF válido");
+    expect(() => processamento_validateInvoicePdf({ fileName: "nota.pdf", fileSize: 11 * 1024 * 1024, contentType: "application/pdf", signature: "%PDF" })).toThrow("10 MB");
+    expect(() => processamento_validateInvoicePdf({ fileName: "nota.pdf", fileSize: 1024, contentType: "application/pdf", signature: "text" })).toThrow("conteúdo");
   });
 
   it("preserva a estrutura de exportação da DRE", () => {

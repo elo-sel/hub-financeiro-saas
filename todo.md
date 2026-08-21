@@ -72,9 +72,9 @@
 
 - [x] Criar guia técnico completo de execução local, arquitetura atual e backend Node.js com Firebase
 
-- [ ] Implementar upload seguro de PDF de nota fiscal para o storage
-- [ ] Persistir metadados e caminho do PDF no vínculo da nota fiscal
-- [ ] Adicionar botão de visualização rápida do PDF com URL temporária autorizada
-- [ ] Validar MIME type, extensão, tamanho, permissões e erros do upload
-- [ ] Criar testes Vitest para validação e vínculo do arquivo fiscal
-- [ ] Verificar repositório GitHub de destino e enviar o projeto atualizado
+- [x] Implementar upload seguro de PDF de nota fiscal para o storage
+- [x] Persistir metadados e caminho do PDF no vínculo da nota fiscal
+- [x] Adicionar botão de visualização rápida do PDF com URL temporária autorizada
+- [x] Validar MIME type, extensão, tamanho, permissões e erros do upload
+- [x] Criar testes Vitest específicos para validação do PDF fiscal, assinatura `%PDF`, limite, MIME e extensão
+- [x] Verificar repositório GitHub de destino e enviar o projeto atualizado, incluindo a versão com upload de PDF
