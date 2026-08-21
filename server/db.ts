@@ -6,6 +6,7 @@ import {
   costCenters,
   customers,
   infrastructureAllocations,
+  invoices,
   providers,
   plans,
   InsertUser,
@@ -17,6 +18,7 @@ import {
   users,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { processamento_rankCustomerProfitability } from "../shared/finance";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -168,6 +170,27 @@ export async function processamento_contractMargins(input: { from?: Date; to?: D
   const allocations = await db.select({ allocation: infrastructureAllocations, contractId: contracts.id, customerId: contracts.customerId }).from(infrastructureAllocations).leftJoin(licenses, eq(licenses.id, infrastructureAllocations.licenseId)).leftJoin(contracts, eq(contracts.id, licenses.contractId)).where(and(input.from && input.to ? gte(infrastructureAllocations.competenceMonth, input.from.toISOString().slice(0, 7)) : undefined, input.from && input.to ? lte(infrastructureAllocations.competenceMonth, input.to.toISOString().slice(0, 7)) : undefined));
   return contractRows.map(row => { const revenue = txRows.filter(item => item.transaction.contractId === row.contract.id && item.transaction.type === "income").reduce((sum, item) => sum + Number(item.transaction.amount), 0); const directCogs = txRows.filter(item => item.transaction.contractId === row.contract.id && item.transaction.type === "expense").reduce((sum, item) => sum + Number(item.transaction.amount), 0); const allocatedCogs = allocations.filter(item => item.contractId === row.contract.id && (!input.productId || item.allocation.productId === input.productId)).reduce((sum, item) => sum + Number(item.allocation.allocatedAmount), 0); const contribution = revenue - directCogs - allocatedCogs; return { contractId: row.contract.id, code: row.contract.code, customerName: row.customerName, productName: row.productName, mrr: Number(row.contract.monthlyRecurringRevenue), revenue, directCogs, allocatedCogs, contribution, marginPercent: revenue > 0 ? (contribution / revenue) * 100 : null }; });
 }
+export async function processamento_customerProfitability(input: { from?: Date; to?: Date; productId?: number }) {
+  const db = await getDb();
+  if (!db) return { top: [], bottom: [] };
+  const txFilters = [eq(transactions.status, "confirmed" as const)];
+  if (input.from) txFilters.push(gte(transactions.occurredAt, input.from));
+  if (input.to) txFilters.push(lte(transactions.occurredAt, input.to));
+  if (input.productId) txFilters.push(eq(transactions.productId, input.productId));
+  const txRows = await db.select({ transaction: transactions }).from(transactions).where(and(...txFilters));
+  const customerRows = await db.select({ customerId: contracts.customerId, customerName: customers.legalName }).from(contracts).leftJoin(customers, eq(customers.id, contracts.customerId)).where(eq(contracts.status, "active" as const));
+  const allocationRows = await db.select({ allocation: infrastructureAllocations, customerId: contracts.customerId }).from(infrastructureAllocations).leftJoin(licenses, eq(licenses.id, infrastructureAllocations.licenseId)).leftJoin(contracts, eq(contracts.id, licenses.contractId)).where(input.from && input.to ? and(gte(infrastructureAllocations.competenceMonth, input.from.toISOString().slice(0, 7)), lte(infrastructureAllocations.competenceMonth, input.to.toISOString().slice(0, 7))) : undefined);
+  const rows = customerRows.map(row => {
+    const revenue = txRows.filter(item => item.transaction.customerId === row.customerId && item.transaction.type === "income").reduce((sum, item) => sum + Number(item.transaction.amount), 0);
+    const directCogs = txRows.filter(item => item.transaction.customerId === row.customerId && item.transaction.type === "expense").reduce((sum, item) => sum + Number(item.transaction.amount), 0);
+    const allocatedCogs = allocationRows.filter(item => item.customerId === row.customerId && (!input.productId || item.allocation.productId === input.productId)).reduce((sum, item) => sum + Number(item.allocation.allocatedAmount), 0);
+    return { customerId: row.customerId, customerName: row.customerName ?? "Cliente sem nome", revenue, cogs: directCogs + allocatedCogs, contribution: 0, marginPercent: null };
+  });
+  return processamento_rankCustomerProfitability(rows);
+}
+export async function processamento_listInvoices() { const db = await getDb(); if (!db) return []; return db.select({ invoice: invoices, transaction: transactions }).from(invoices).innerJoin(transactions, eq(transactions.id, invoices.transactionId)).orderBy(desc(invoices.issueDate)); }
+export async function processamento_createInvoice(input: typeof invoices.$inferInsert) { const db = await getDb(); if (!db) throw new Error("Banco de dados indisponível"); const [transaction] = await db.select({ id: transactions.id }).from(transactions).where(eq(transactions.id, input.transactionId)).limit(1); if (!transaction) throw new Error("Lançamento não encontrado"); const [existing] = await db.select({ id: invoices.id }).from(invoices).where(eq(invoices.transactionId, input.transactionId)).limit(1); if (existing) throw new Error("Este lançamento já possui uma nota fiscal vinculada"); const result = await db.insert(invoices).values(input); return result[0]?.insertId; }
+export async function processamento_deleteInvoice(id: number) { const db = await getDb(); if (!db) throw new Error("Banco de dados indisponível"); await db.delete(invoices).where(eq(invoices.id, id)); return { success: true }; }
 export async function processamento_goalProgress(input: { year: number; productId?: number }) { const db = await getDb(); if (!db) return []; const goalFilters = [eq(goals.year, input.year)]; if (input.productId) goalFilters.push(eq(goals.productId, input.productId)); const goalRows = await db.select().from(goals).where(and(...goalFilters)); const start = new Date(`${input.year}-01-01T00:00:00.000Z`); const end = new Date(`${input.year}-12-31T23:59:59.999Z`); const contractFilters = [gte(contracts.startDate, start), lte(contracts.startDate, end)]; if (input.productId) contractFilters.push(eq(contracts.productId, input.productId)); const contractRows = await db.select({ startDate: contracts.startDate, mrr: contracts.monthlyRecurringRevenue }).from(contracts).where(and(...contractFilters)); const txFilters = [gte(transactions.occurredAt, start), lte(transactions.occurredAt, end), eq(transactions.type, "income" as const), eq(transactions.status, "confirmed" as const)]; if (input.productId) txFilters.push(eq(transactions.productId, input.productId)); const incomeRows = await db.select({ occurredAt: transactions.occurredAt, amount: transactions.amount }).from(transactions).where(and(...txFilters)); return goalRows.map(goal => { const quarter = Number(goal.quarter.slice(1)); const actualContracts = contractRows.filter(row => Math.ceil((new Date(row.startDate).getUTCMonth() + 1) / 3) === quarter); const actualMrr = actualContracts.reduce((sum, row) => sum + Number(row.mrr), 0); const actualReceived = incomeRows.filter(row => Math.ceil((new Date(row.occurredAt).getUTCMonth() + 1) / 3) === quarter).reduce((sum, row) => sum + Number(row.amount), 0); return { ...goal, actualMrr, actualReceived, actualNewCustomers: actualContracts.length, mrrAttainment: Number(goal.targetMrr) > 0 ? actualMrr / Number(goal.targetMrr) * 100 : null, receivedAttainment: Number(goal.targetMrr) > 0 ? actualReceived / Number(goal.targetMrr) * 100 : null, customerAttainment: Number(goal.targetNewCustomers) > 0 ? actualContracts.length / Number(goal.targetNewCustomers) * 100 : null }; }); }
 export async function processamento_infrastructureBreakdown(input: { from: Date; to: Date; productId?: number }) {
   const db = await getDb(); if (!db) return [];

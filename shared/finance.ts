@@ -44,3 +44,18 @@ export function processamento_exportDreRows(rows: processamento_DreRow[]) {
 export function processamento_exportMarginRows(rows: Array<{ code: string; customerName?: string | null; productName?: string | null; revenue: number; directCogs: number; allocatedCogs: number; contribution: number; marginPercent: number | null }>) {
   return { headers: ["Contrato", "Cliente", "Produto", "Receita", "COGS direto", "COGS rateado", "Contribuição", "Margem %"], rows: rows.map(row => [row.code, row.customerName ?? "", row.productName ?? "", row.revenue, row.directCogs, row.allocatedCogs, row.contribution, row.marginPercent]) };
 }
+
+export type processamento_CustomerProfitability = { customerId: number; customerName: string; revenue: number; cogs: number; contribution: number; marginPercent: number | null };
+export function processamento_rankCustomerProfitability(rows: processamento_CustomerProfitability[]) {
+  const grouped = new Map<number, processamento_CustomerProfitability>();
+  for (const row of rows) {
+    const current = grouped.get(row.customerId) ?? { ...row, revenue: 0, cogs: 0, contribution: 0, marginPercent: null };
+    current.revenue += row.revenue;
+    current.cogs += row.cogs;
+    current.contribution = current.revenue - current.cogs;
+    current.marginPercent = current.revenue > 0 ? current.contribution / current.revenue * 100 : null;
+    grouped.set(row.customerId, current);
+  }
+  const result = Array.from(grouped.values());
+  return { top: [...result].sort((a, b) => b.contribution - a.contribution).slice(0, 5), bottom: [...result].sort((a, b) => (a.marginPercent ?? -Infinity) - (b.marginPercent ?? -Infinity)).slice(0, 5) };
+}

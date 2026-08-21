@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows } from "../shared/finance";
+import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows, processamento_rankCustomerProfitability } from "../shared/finance";
 
 describe("financeiro: rateio e KPIs", () => {
   it("rateia o custo total entre licenças ativas preservando o total", () => {
@@ -28,6 +28,17 @@ describe("financeiro: rateio e KPIs", () => {
   it("agrupa DRE por mês e calcula EBITDA", () => {
     const result = processamento_buildTemporalDre([{ date: "2026-01-10T00:00:00.000Z", income: 1000, taxes: 50, cogs: 200, opex: 300 }, { date: "2026-01-20T00:00:00.000Z", income: 500, taxes: 25, cogs: 100, opex: 50 }], "month");
     expect(result).toEqual([{ period: "2026-01", revenue: 1500, taxes: 75, cogs: 300, opex: 350, ebitda: 775 }]);
+  });
+
+  it("agrega múltiplos contratos do mesmo cliente sem duplicar o ranking", () => {
+    const result = processamento_rankCustomerProfitability([
+      { customerId: 1, customerName: "Cliente A", revenue: 1000, cogs: 200, contribution: 0, marginPercent: null },
+      { customerId: 1, customerName: "Cliente A", revenue: 500, cogs: 100, contribution: 0, marginPercent: null },
+      { customerId: 2, customerName: "Cliente B", revenue: 1000, cogs: 900, contribution: 0, marginPercent: null },
+    ]);
+    expect(result.top[0]).toMatchObject({ customerId: 1, revenue: 1500, cogs: 300, contribution: 1200, marginPercent: 80 });
+    expect(result.top).toHaveLength(2);
+    expect(result.bottom[0]).toMatchObject({ customerId: 2, marginPercent: 10 });
   });
 
   it("preserva a estrutura de exportação da DRE", () => {

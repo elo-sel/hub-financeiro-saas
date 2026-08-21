@@ -132,6 +132,20 @@ export const transactions = mysqlTable("financial_transactions", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, table => ({ dateIdx: index("transactions_date_idx").on(table.occurredAt), productDateIdx: index("transactions_product_date_idx").on(table.productId, table.occurredAt), typeIdx: index("transactions_type_idx").on(table.type) }));
 
+export const invoices = mysqlTable("financial_invoices", {
+  id: int("id").autoincrement().primaryKey(),
+  transactionId: int("transactionId").notNull().unique(),
+  number: varchar("number", { length: 40 }).notNull(),
+  series: varchar("series", { length: 20 }),
+  issueDate: timestamp("issueDate").notNull(),
+  accessKey: varchar("accessKey", { length: 44 }),
+  issuerDocument: varchar("issuerDocument", { length: 30 }),
+  recipientDocument: varchar("recipientDocument", { length: 30 }),
+  status: mysqlEnum("status", ["issued", "cancelled", "pending"]).default("issued").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, table => ({ transactionIdx: index("invoices_transaction_idx").on(table.transactionId), accessKeyIdx: uniqueIndex("invoices_access_key_idx").on(table.accessKey) }));
 export const infrastructureAllocations = mysqlTable("infrastructure_allocations", {
   id: int("id").autoincrement().primaryKey(),
   transactionId: int("transactionId").notNull(),

@@ -63,3 +63,9 @@
 - [x] Exportar relatório de margem por contrato para CSV
 - [x] Exportar relatório de margem por contrato para PDF
 - [x] Validar nomes, conteúdo, downloads e responsividade dos controles de exportação
+
+- [x] Criar widget dos 5 clientes mais lucrativos e dos 5 com menor margem, com agregação sem duplicidade por cliente
+- [x] Implementar alternância persistente entre tema claro e escuro
+- [x] Criar entidade e seção de notas fiscais vinculáveis a lançamentos
+- [x] Adicionar fluxo para vincular e desvincular nota fiscal de lançamento
+- [x] Validar dados, tema, vínculos e responsividade com typecheck, 11 testes e screenshots desktop/mobile

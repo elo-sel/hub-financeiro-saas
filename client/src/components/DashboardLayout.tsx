@@ -21,11 +21,12 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { Boxes, FilePlus2, LayoutDashboard, LogOut, PanelLeft, Settings2, Target, UserPlus } from "lucide-react";
+import { Boxes, FilePlus2, FileText, LayoutDashboard, LogOut, Moon, PanelLeft, Settings2, Sun, Target, UserPlus } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Visão executiva", path: "/" },
@@ -34,6 +35,7 @@ const menuItems = [
   { icon: UserPlus, label: "Cadastros operacionais", path: "/cadastro" },
   { icon: Settings2, label: "Contratos e licenças", path: "/contratos" },
   { icon: Boxes, label: "Produtos, planos e provedores", path: "/catalogo" },
+  { icon: FileText, label: "Notas fiscais", path: "/notas-fiscais" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -116,6 +118,7 @@ function DashboardLayoutContent({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeMenuItem = menuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (isCollapsed) {
@@ -171,10 +174,9 @@ function DashboardLayoutContent({
                 <PanelLeft className="h-4 w-4 text-muted-foreground" />
               </button>
               {!isCollapsed ? (
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-semibold tracking-tight truncate">
-                    Elo Finance Hub
-                  </span>
+                <div className="flex items-center justify-between gap-2 min-w-0 w-full">
+                  <span className="font-semibold tracking-tight truncate">Elo Finance Hub</span>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => toggleTheme?.()} aria-label={theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}>{theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</Button>
                 </div>
               ) : null}
             </div>
@@ -247,7 +249,7 @@ function DashboardLayoutContent({
       <SidebarInset>
         {isMobile && (
           <div className="flex border-b h-14 items-center justify-between bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
-            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
               <SidebarTrigger className="h-9 w-9 rounded-lg bg-background" />
               <div className="flex items-center gap-3">
                 <div className="flex flex-col gap-1">
@@ -256,6 +258,7 @@ function DashboardLayoutContent({
                   </span>
                 </div>
               </div>
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toggleTheme?.()} aria-label={theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}>{theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</Button>
             </div>
           </div>
         )}

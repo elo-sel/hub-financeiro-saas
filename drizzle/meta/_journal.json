@@ -15,6 +15,13 @@
       "when": 1787199067333,
       "tag": "0001_thankful_centennial",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1787281323409,
+      "tag": "0002_skinny_wolfsbane",
+      "breakpoints": true
     }
   ]
 }

@@ -14,11 +14,12 @@ function Router() {
     <Route path="/cadastro" component={Home} />
     <Route path="/contratos" component={Home} />
     <Route path="/catalogo" component={Home} />
+      <Route path="/notas-fiscais" component={Home} />
     <Route path="/404" component={NotFound} />
     <Route component={NotFound} />
   </Switch>;
 }
 
 export default function App() {
-  return <ErrorBoundary><ThemeProvider defaultTheme="light"><TooltipProvider><Toaster /><Router /></TooltipProvider></ThemeProvider></ErrorBoundary>;
+  return <ErrorBoundary><ThemeProvider defaultTheme="light" switchable><TooltipProvider><Toaster /><Router /></TooltipProvider></ThemeProvider></ErrorBoundary>;
 }
