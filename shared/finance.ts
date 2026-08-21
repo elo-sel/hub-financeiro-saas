@@ -27,3 +27,11 @@ export function processamento_calcularKpis(input: { mrr: number; received: numbe
   const runway = netBurnRate > 0 ? cashBalance / netBurnRate : null;
   return { ...input, grossMargin, netBurnRate, cashBalance, runway };
 }
+
+export type processamento_DreRow = { period: string; revenue: number; taxes: number; cogs: number; opex: number; ebitda: number };
+export function processamento_buildTemporalDre(rows: Array<{ date: string; income: number; taxes: number; cogs: number; opex: number }>, mode: "month" | "quarter" | "year"): processamento_DreRow[] {
+  const grouped = new Map<string, processamento_DreRow>();
+  for (const row of rows) { const date = new Date(row.date); const year = date.getUTCFullYear(); const month = date.getUTCMonth() + 1; const period = mode === "year" ? String(year) : mode === "quarter" ? `${year}-Q${Math.ceil(month / 3)}` : `${year}-${String(month).padStart(2, "0")}`; const current = grouped.get(period) ?? { period, revenue: 0, taxes: 0, cogs: 0, opex: 0, ebitda: 0 }; current.revenue += row.income; current.taxes += row.taxes; current.cogs += row.cogs; current.opex += row.opex; current.ebitda = current.revenue - current.taxes - current.cogs - current.opex; grouped.set(period, current); }
+  return Array.from(grouped.values()).sort((a, b) => a.period.localeCompare(b.period));
+}
+export function processamento_contractMargin(input: { revenue: number; directCogs: number; allocatedCogs: number; opex: number }) { const contribution = input.revenue - input.directCogs - input.allocatedCogs; return { contribution, marginPercent: input.revenue > 0 ? (contribution / input.revenue) * 100 : null, afterOpex: contribution - input.opex }; }

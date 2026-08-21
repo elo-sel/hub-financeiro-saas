@@ -45,3 +45,9 @@
 - [ ] Adicionar gráfico interativo de rateio de infraestrutura por produto/cliente
 - [ ] Adicionar gráfico interativo de evolução das metas financeiras e atingimento
 - [ ] Validar os novos fluxos com testes Vitest, typecheck e screenshots responsivos
+
+- [ ] Implementar consulta temporal de DRE mensal, trimestral e anual baseada em lançamentos reais
+- [ ] Implementar cálculo detalhado de margem de contribuição por contrato, incluindo receita e COGS rateado/direto
+- [ ] Implementar gráfico interativo de rateio de infraestrutura por produto e cliente
+- [ ] Implementar gráfico interativo de evolução das metas financeiras com projeção configurada versus realizado
+- [ ] Validar os novos relatórios e gráficos com Vitest, typecheck e screenshots responsivos
