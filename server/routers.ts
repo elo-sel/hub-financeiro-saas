@@ -11,7 +11,7 @@ import {
   processamento_createLicense,
   processamento_createProduct, processamento_updateProduct, processamento_createProvider, processamento_createPlan, processamento_updatePlan,
   processamento_createTransaction,
-  processamento_getDashboard,
+  processamento_getDashboard, processamento_temporalDre, processamento_contractMargins, processamento_infrastructureBreakdown, processamento_goalProgress,
   processamento_listCatalog,
   processamento_listGoals,
   processamento_listOperations,
@@ -70,6 +70,10 @@ export const appRouter = router({
     createBankAccount: protectedProcedure.input(z.object({ name: z.string().trim().min(2).max(120), institution: z.string().max(120).optional(), openingBalance: z.number().min(0).default(0) })).mutation(({ input }) => processamento_createBankAccount({ ...input, openingBalance: input.openingBalance.toFixed(2) })),
     createContract: protectedProcedure.input(z.object({ customerId: z.number().int().positive(), productId: z.number().int().positive(), code: z.string().trim().min(2).max(80), billingCycle: z.enum(["monthly", "quarterly", "annual"]), monthlyRecurringRevenue: z.number().min(0), startDate: z.string().datetime(), renewalDate: z.string().datetime().optional(), paymentStatus: z.enum(["current", "overdue", "unknown"]).default("unknown") })).mutation(({ input }) => processamento_createContract({ ...input, monthlyRecurringRevenue: input.monthlyRecurringRevenue.toFixed(2), startDate: new Date(input.startDate), renewalDate: input.renewalDate ? new Date(input.renewalDate) : undefined, status: "active" })),
     createLicense: protectedProcedure.input(z.object({ contractId: z.number().int().positive(), licenseKey: z.string().trim().min(2).max(100), activeSeats: z.number().int().min(1).default(1) })).mutation(({ input }) => processamento_createLicense(input)),
+    temporalDre: protectedProcedure.input(z.object({ from: z.string().datetime(), to: z.string().datetime(), mode: z.enum(["month", "quarter", "year"]).default("month"), productId: z.number().int().positive().optional() })).query(({ input }) => processamento_temporalDre({ ...input, from: new Date(input.from), to: new Date(input.to) })),
+    goalProgress: protectedProcedure.input(z.object({ year: z.number().int().min(2020).max(2200), productId: z.number().int().positive().optional() })).query(({ input }) => processamento_goalProgress(input)),
+    contractMargins: protectedProcedure.input(z.object({ from: z.string().datetime().optional(), to: z.string().datetime().optional(), productId: z.number().int().positive().optional() }).default({})).query(({ input }) => processamento_contractMargins({ ...input, from: input.from ? new Date(input.from) : undefined, to: input.to ? new Date(input.to) : undefined })),
+    infrastructureBreakdown: protectedProcedure.input(z.object({ from: z.string().datetime(), to: z.string().datetime(), productId: z.number().int().positive().optional() })).query(({ input }) => processamento_infrastructureBreakdown({ ...input, from: new Date(input.from), to: new Date(input.to) })),
     dashboard: protectedProcedure.input(z.object({ month: z.string().regex(/^\d{4}-\d{2}$/), productId: z.number().int().positive().optional() }).default({ month: processamento_currentMonth() })).query(({ input }) => {
       const bounds = processamento_monthBounds(input.month);
       return processamento_getDashboard({ ...bounds, productId: input.productId });

@@ -40,14 +40,20 @@
 - [ ] Implementar CRUD completo de produtos SaaS, incluindo criação, edição, status e custo base compartilhado
 - [ ] Implementar CRUD completo de planos, com produto, preço, ciclo de cobrança e status
 - [ ] Implementar CRUD completo de provedores de infraestrutura, incluindo GCP, AWS, Azure, Cloudflare e APIs
-- [ ] Implementar DRE temporal mensal, trimestral e anual com dados reais
-- [ ] Implementar cálculo detalhado de margem de contribuição por contrato
-- [ ] Adicionar gráfico interativo de rateio de infraestrutura por produto/cliente
-- [ ] Adicionar gráfico interativo de evolução das metas financeiras e atingimento
-- [ ] Validar os novos fluxos com testes Vitest, typecheck e screenshots responsivos
+- [x] Implementar DRE temporal mensal, trimestral e anual com dados reais
+- [x] Implementar cálculo detalhado de margem de contribuição por contrato
+- [x] Adicionar gráfico interativo de rateio de infraestrutura por produto/cliente
+- [x] Adicionar gráfico interativo de evolução das metas financeiras e atingimento
+- [x] Validar os novos fluxos com testes Vitest, typecheck e screenshots responsivos
 
-- [ ] Implementar consulta temporal de DRE mensal, trimestral e anual baseada em lançamentos reais
-- [ ] Implementar cálculo detalhado de margem de contribuição por contrato, incluindo receita e COGS rateado/direto
-- [ ] Implementar gráfico interativo de rateio de infraestrutura por produto e cliente
-- [ ] Implementar gráfico interativo de evolução das metas financeiras com projeção configurada versus realizado
-- [ ] Validar os novos relatórios e gráficos com Vitest, typecheck e screenshots responsivos
+- [x] Implementar consulta temporal de DRE mensal, trimestral e anual baseada em lançamentos reais
+- [x] Implementar cálculo detalhado de margem de contribuição por contrato, incluindo receita e COGS rateado/direto
+- [x] Implementar gráfico interativo de rateio de infraestrutura por produto e cliente
+- [x] Implementar gráfico interativo de evolução das metas financeiras com projeção configurada versus realizado
+- [x] Validar os novos relatórios e gráficos com Vitest, typecheck e screenshots responsivos
+
+- [x] Corrigir a agregação temporal real da DRE com modo mensal, trimestral e anual, controles de UI e impostos configuráveis
+- [x] Corrigir a margem por contrato para filtrar alocações por período e atribuir COGS rateado ao contrato correto
+- [x] Expor produto e cliente explicitamente no detalhamento visual do rateio, com interação verificável
+- [x] Calcular o realizado de metas por contratos e lançamentos reais por trimestre, sem valores fixos
+- [x] Adicionar testes específicos dos novos endpoints/transformações e screenshots desktop e mobile dos relatórios
