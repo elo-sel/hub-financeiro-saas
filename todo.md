@@ -69,3 +69,5 @@
 - [x] Criar entidade e seção de notas fiscais vinculáveis a lançamentos
 - [x] Adicionar fluxo para vincular e desvincular nota fiscal de lançamento
 - [x] Validar dados, tema, vínculos e responsividade com typecheck, 11 testes e screenshots desktop/mobile
+
+- [x] Criar guia técnico completo de execução local, arquitetura atual e backend Node.js com Firebase
