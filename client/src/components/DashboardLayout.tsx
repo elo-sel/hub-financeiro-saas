@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { FilePlus2, LayoutDashboard, LogOut, PanelLeft, Settings2, Target, UserPlus } from "lucide-react";
+import { Boxes, FilePlus2, LayoutDashboard, LogOut, PanelLeft, Settings2, Target, UserPlus } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -33,6 +33,7 @@ const menuItems = [
   { icon: Target, label: "Cockpit de metas", path: "/metas" },
   { icon: UserPlus, label: "Cadastros operacionais", path: "/cadastro" },
   { icon: Settings2, label: "Contratos e licenças", path: "/contratos" },
+  { icon: Boxes, label: "Produtos, planos e provedores", path: "/catalogo" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

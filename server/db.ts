@@ -7,6 +7,7 @@ import {
   customers,
   infrastructureAllocations,
   providers,
+  plans,
   InsertUser,
   licenses,
   products,
@@ -99,6 +100,12 @@ export async function processamento_ensureCatalog() {
     await db.insert(products).values(item).onDuplicateKeyUpdate({ set: { name: item.name, category: item.category } });
   }
 }
+
+export async function processamento_createProduct(input: { name: string; slug: string; category?: string; description?: string; primaryProviderId?: number; sharedInfrastructure: boolean; sharedBaseMonthlyCost: string }) { const db = await getDb(); if (!db) throw new Error("Banco de dados indisponível"); const result = await db.insert(products).values(input); return { id: Number(result[0].insertId) }; }
+export async function processamento_updateProduct(input: { id: number; name?: string; category?: string; description?: string; primaryProviderId?: number; sharedInfrastructure?: boolean; sharedBaseMonthlyCost?: string; active?: boolean }) { const db = await getDb(); if (!db) throw new Error("Banco de dados indisponível"); const { id, ...changes } = input; await db.update(products).set(changes).where(eq(products.id, id)); return { id }; }
+export async function processamento_createProvider(input: { name: string; code: string }) { const db = await getDb(); if (!db) throw new Error("Banco de dados indisponível"); const result = await db.insert(providers).values(input); return { id: Number(result[0].insertId) }; }
+export async function processamento_createPlan(input: { productId: number; name: string; description?: string; defaultMonthlyPrice: string }) { const db = await getDb(); if (!db) throw new Error("Banco de dados indisponível"); const result = await db.insert(plans).values(input); return { id: Number(result[0].insertId) }; }
+export async function processamento_updatePlan(input: { id: number; name?: string; description?: string; defaultMonthlyPrice?: string; active?: boolean }) { const db = await getDb(); if (!db) throw new Error("Banco de dados indisponível"); const { id, ...changes } = input; await db.update(plans).set(changes).where(eq(plans.id, id)); return { id }; }
 
 export async function processamento_listCatalog() {
   const db = await getDb();

@@ -13,6 +13,7 @@ function Router() {
     <Route path="/metas" component={Home} />
     <Route path="/cadastro" component={Home} />
     <Route path="/contratos" component={Home} />
+    <Route path="/catalogo" component={Home} />
     <Route path="/404" component={NotFound} />
     <Route component={NotFound} />
   </Switch>;

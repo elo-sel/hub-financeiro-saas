@@ -36,3 +36,12 @@
 - [ ] Adicionar CRUD ou cadastro explícito de provedores na interface e no backend
 - [ ] Criar fluxo de mensalidade vinculado a contrato e cliente na central de lançamentos
 - [ ] Adicionar campos de cliente e contrato ao formulário de lançamentos e propagar os vínculos ao rateio
+
+- [ ] Implementar CRUD completo de produtos SaaS, incluindo criação, edição, status e custo base compartilhado
+- [ ] Implementar CRUD completo de planos, com produto, preço, ciclo de cobrança e status
+- [ ] Implementar CRUD completo de provedores de infraestrutura, incluindo GCP, AWS, Azure, Cloudflare e APIs
+- [ ] Implementar DRE temporal mensal, trimestral e anual com dados reais
+- [ ] Implementar cálculo detalhado de margem de contribuição por contrato
+- [ ] Adicionar gráfico interativo de rateio de infraestrutura por produto/cliente
+- [ ] Adicionar gráfico interativo de evolução das metas financeiras e atingimento
+- [ ] Validar os novos fluxos com testes Vitest, typecheck e screenshots responsivos
