@@ -57,3 +57,9 @@
 - [x] Expor produto e cliente explicitamente no detalhamento visual do rateio, com interação verificável
 - [x] Calcular o realizado de metas por contratos e lançamentos reais por trimestre, sem valores fixos
 - [x] Adicionar testes específicos dos novos endpoints/transformações e screenshots desktop e mobile dos relatórios
+
+- [x] Exportar DRE temporal filtrada para CSV
+- [x] Exportar DRE temporal filtrada para PDF
+- [x] Exportar relatório de margem por contrato para CSV
+- [x] Exportar relatório de margem por contrato para PDF
+- [x] Validar nomes, conteúdo, downloads e responsividade dos controles de exportação

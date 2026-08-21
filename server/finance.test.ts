@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin } from "../shared/finance";
+import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows } from "../shared/finance";
 
 describe("financeiro: rateio e KPIs", () => {
   it("rateia o custo total entre licenças ativas preservando o total", () => {
@@ -28,6 +28,18 @@ describe("financeiro: rateio e KPIs", () => {
   it("agrupa DRE por mês e calcula EBITDA", () => {
     const result = processamento_buildTemporalDre([{ date: "2026-01-10T00:00:00.000Z", income: 1000, taxes: 50, cogs: 200, opex: 300 }, { date: "2026-01-20T00:00:00.000Z", income: 500, taxes: 25, cogs: 100, opex: 50 }], "month");
     expect(result).toEqual([{ period: "2026-01", revenue: 1500, taxes: 75, cogs: 300, opex: 350, ebitda: 775 }]);
+  });
+
+  it("preserva a estrutura de exportação da DRE", () => {
+    const result = processamento_exportDreRows([{ period: "2026-Q1", revenue: 1000, taxes: 50, cogs: 200, opex: 100, ebitda: 650 }]);
+    expect(result.headers).toEqual(["Período", "Receita", "Impostos", "COGS", "OpEx", "EBITDA"]);
+    expect(result.rows[0]).toEqual(["2026-Q1", 1000, 50, 200, 100, 650]);
+  });
+
+  it("preserva a estrutura de exportação da margem contratual", () => {
+    const result = processamento_exportMarginRows([{ code: "CTR-1", customerName: "Cliente", productName: "Solar Manager", revenue: 1000, directCogs: 100, allocatedCogs: 200, contribution: 700, marginPercent: 70 }]);
+    expect(result.headers).toContain("COGS rateado");
+    expect(result.rows[0]).toEqual(["CTR-1", "Cliente", "Solar Manager", 1000, 100, 200, 700, 70]);
   });
 
   it("calcula margem de contribuição com COGS direto e rateado", () => {

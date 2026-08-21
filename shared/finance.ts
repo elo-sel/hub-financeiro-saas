@@ -35,3 +35,12 @@ export function processamento_buildTemporalDre(rows: Array<{ date: string; incom
   return Array.from(grouped.values()).sort((a, b) => a.period.localeCompare(b.period));
 }
 export function processamento_contractMargin(input: { revenue: number; directCogs: number; allocatedCogs: number; opex: number }) { const contribution = input.revenue - input.directCogs - input.allocatedCogs; return { contribution, marginPercent: input.revenue > 0 ? (contribution / input.revenue) * 100 : null, afterOpex: contribution - input.opex }; }
+
+export function processamento_exportDreRows(rows: processamento_DreRow[]) {
+  const list = rows;
+  return { headers: ["Período", "Receita", "Impostos", "COGS", "OpEx", "EBITDA"], rows: list.map(row => [row.period, row.revenue, row.taxes, row.cogs, row.opex, row.ebitda]) };
+}
+
+export function processamento_exportMarginRows(rows: Array<{ code: string; customerName?: string | null; productName?: string | null; revenue: number; directCogs: number; allocatedCogs: number; contribution: number; marginPercent: number | null }>) {
+  return { headers: ["Contrato", "Cliente", "Produto", "Receita", "COGS direto", "COGS rateado", "Contribuição", "Margem %"], rows: rows.map(row => [row.code, row.customerName ?? "", row.productName ?? "", row.revenue, row.directCogs, row.allocatedCogs, row.contribution, row.marginPercent]) };
+}
