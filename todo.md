@@ -78,3 +78,14 @@
 - [x] Validar MIME type, extensão, tamanho, permissões e erros do upload
 - [x] Criar testes Vitest específicos para validação do PDF fiscal, assinatura `%PDF`, limite, MIME e extensão
 - [x] Verificar repositório GitHub de destino e enviar o projeto atualizado, incluindo a versão com upload de PDF
+
+- [x] Extrair valor, data, CNPJ e fornecedor/cliente do PDF por IA após upload
+- [x] Persistir resultado da extração como sugestão revisável, sem sobrescrever automaticamente dados financeiros
+- [x] Adicionar filtros avançados de notas fiscais por período, status de pagamento e fornecedor/cliente
+- [x] Criar indicador do mês atual para lançamentos sem nota fiscal anexada
+- [x] Criar testes para validação da extração, filtros e contagem de pendências
+- [ ] Atualizar o repositório privado no GitHub com a nova versão
+
+- [ ] Implementar fluxo explícito de revisão das sugestões da IA, com edição/aprovação e status revisado
+- [ ] Corrigir o indicador para usar exatamente o conjunto de entradas confirmadas do mês atual e percentual consistente
+- [ ] Adicionar testes de sucesso e falha do pipeline de extração fiscal por IA e persistência dos campos sugeridos

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows, processamento_rankCustomerProfitability, processamento_validateInvoicePdf } from "../shared/finance";
+import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows, processamento_calculatePendingInvoiceRate, processamento_filterInvoiceRows, processamento_parseInvoiceExtraction, processamento_rankCustomerProfitability, processamento_validateInvoicePdf } from "../shared/finance";
 
 describe("financeiro: rateio e KPIs", () => {
   it("rateia o custo total entre licenças ativas preservando o total", () => {
@@ -39,6 +39,23 @@ describe("financeiro: rateio e KPIs", () => {
     expect(result.top[0]).toMatchObject({ customerId: 1, revenue: 1500, cogs: 300, contribution: 1200, marginPercent: 80 });
     expect(result.top).toHaveLength(2);
     expect(result.bottom[0]).toMatchObject({ customerId: 2, marginPercent: 10 });
+  });
+
+  it("normaliza a resposta estruturada da extração fiscal e rejeita JSON inválido", () => {
+    expect(processamento_parseInvoiceExtraction(JSON.stringify({ amount: 1250.5, issueDate: "2026-08-22", issuerDocument: "12345678000199", recipientDocument: null, supplierName: "Fornecedor", confidence: 0.94 }))).toMatchObject({ amount: 1250.5, issuerDocument: "12345678000199", supplierName: "Fornecedor", confidence: 0.94 });
+    expect(processamento_parseInvoiceExtraction(JSON.stringify({ amount: "não identificado", supplierName: 10 }))).toMatchObject({ amount: null, issueDate: null, supplierName: null });
+    expect(() => processamento_parseInvoiceExtraction("não é JSON")).toThrow();
+  });
+
+  it("filtra notas por período, status e fornecedor/cliente", () => {
+    const rows = [
+      { invoice: { issueDate: "2026-08-10T00:00:00.000Z", number: "NF-1", extractedSupplierName: "Acme" }, transaction: { status: "confirmed" as const, description: "Mensalidade" }, customerName: "Cliente Solar" },
+      { invoice: { issueDate: "2026-07-10T00:00:00.000Z", number: "NF-2", extractedSupplierName: "Beta" }, transaction: { status: "pending" as const, description: "Infra" }, customerName: "Cliente Elo" },
+    ];
+    expect(processamento_filterInvoiceRows(rows, { search: "solar", paymentStatus: "confirmed" })).toHaveLength(1);
+    expect(processamento_filterInvoiceRows(rows, { from: new Date("2026-08-01T00:00:00.000Z"), to: new Date("2026-08-31T23:59:59.999Z") })).toHaveLength(1);
+    expect(processamento_calculatePendingInvoiceRate(2, 8)).toBe(25);
+    expect(processamento_calculatePendingInvoiceRate(0, 0)).toBeNull();
   });
 
   it("valida PDFs fiscais e rejeita arquivos inválidos", () => {

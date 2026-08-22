@@ -66,3 +66,17 @@ export function processamento_validateInvoicePdf(input: { fileName: string; file
   if (input.signature !== "%PDF") throw new Error("O conteúdo do arquivo não corresponde a um PDF válido");
   return true;
 }
+
+export function processamento_filterInvoiceRows<T extends { invoice: { issueDate: Date | string; number: string; extractedSupplierName: string | null }; transaction: { status: "confirmed" | "pending" | "cancelled"; description: string }; customerName: string | null }>(rows: T[], input: { from?: Date; to?: Date; paymentStatus?: "confirmed" | "pending" | "cancelled"; search?: string } = {}) {
+  const search = input.search?.trim().toLowerCase();
+  return rows.filter(row => (!input.from || new Date(row.invoice.issueDate) >= input.from) && (!input.to || new Date(row.invoice.issueDate) <= input.to) && (!input.paymentStatus || row.transaction.status === input.paymentStatus) && (!search || [row.invoice.number, row.invoice.extractedSupplierName, row.customerName, row.transaction.description].some(value => Boolean(value?.toLowerCase().includes(search)))));
+}
+export function processamento_calculatePendingInvoiceRate(pending: number, total: number) {
+  return total > 0 ? (pending / total) * 100 : null;
+}
+
+export type InvoiceExtraction = { amount: number | null; issueDate: string | null; issuerDocument: string | null; recipientDocument: string | null; supplierName: string | null; confidence: number | null };
+export function processamento_parseInvoiceExtraction(content: string): InvoiceExtraction {
+  const parsed = JSON.parse(content) as Partial<InvoiceExtraction>;
+  return { amount: typeof parsed.amount === "number" ? parsed.amount : null, issueDate: typeof parsed.issueDate === "string" ? parsed.issueDate : null, issuerDocument: typeof parsed.issuerDocument === "string" ? parsed.issuerDocument : null, recipientDocument: typeof parsed.recipientDocument === "string" ? parsed.recipientDocument : null, supplierName: typeof parsed.supplierName === "string" ? parsed.supplierName : null, confidence: typeof parsed.confidence === "number" ? parsed.confidence : null };
+}
