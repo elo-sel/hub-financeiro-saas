@@ -80,3 +80,10 @@ export function processamento_parseInvoiceExtraction(content: string): InvoiceEx
   const parsed = JSON.parse(content) as Partial<InvoiceExtraction>;
   return { amount: typeof parsed.amount === "number" ? parsed.amount : null, issueDate: typeof parsed.issueDate === "string" ? parsed.issueDate : null, issuerDocument: typeof parsed.issuerDocument === "string" ? parsed.issuerDocument : null, recipientDocument: typeof parsed.recipientDocument === "string" ? parsed.recipientDocument : null, supplierName: typeof parsed.supplierName === "string" ? parsed.supplierName : null, confidence: typeof parsed.confidence === "number" ? parsed.confidence : null };
 }
+
+export function processamento_validateCnpj(value: string | null | undefined) {
+  const digits = (value ?? "").replace(/\D/g, "");
+  if (digits.length !== 14 || /^([0-9])\1{13}$/.test(digits)) return false;
+  const calculate = (length: number) => { let sum = 0; let weight = length - 7; for (let index = 0; index < length; index += 1) { sum += Number(digits[index]) * weight; weight -= 1; if (weight === 1) weight = 9; } return (sum * 10) % 11 === 10 ? 0 : (sum * 10) % 11; };
+  return calculate(12) === Number(digits[12]) && calculate(13) === Number(digits[13]);
+}

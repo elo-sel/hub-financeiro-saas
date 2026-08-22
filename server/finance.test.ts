@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows, processamento_calculatePendingInvoiceRate, processamento_filterInvoiceRows, processamento_parseInvoiceExtraction, processamento_rankCustomerProfitability, processamento_validateInvoicePdf } from "../shared/finance";
+import { processamento_buildTemporalDre, processamento_calcularAtingimento, processamento_calcularDre, processamento_calcularKpis, processamento_calcularRateioProporcional, processamento_contractMargin, processamento_exportDreRows, processamento_exportMarginRows, processamento_calculatePendingInvoiceRate, processamento_filterInvoiceRows, processamento_parseInvoiceExtraction, processamento_rankCustomerProfitability, processamento_validateCnpj, processamento_validateInvoicePdf } from "../shared/finance";
 
 describe("financeiro: rateio e KPIs", () => {
   it("rateia o custo total entre licenças ativas preservando o total", () => {
@@ -39,6 +39,13 @@ describe("financeiro: rateio e KPIs", () => {
     expect(result.top[0]).toMatchObject({ customerId: 1, revenue: 1500, cogs: 300, contribution: 1200, marginPercent: 80 });
     expect(result.top).toHaveLength(2);
     expect(result.bottom[0]).toMatchObject({ customerId: 2, marginPercent: 10 });
+  });
+
+  it("valida CNPJ com dígitos verificadores e aceita máscara", () => {
+    expect(processamento_validateCnpj("04.252.011/0001-10")).toBe(true);
+    expect(processamento_validateCnpj("04.252.011/0001-11")).toBe(false);
+    expect(processamento_validateCnpj("11.111.111/1111-11")).toBe(false);
+    expect(processamento_validateCnpj(null)).toBe(false);
   });
 
   it("normaliza a resposta estruturada da extração fiscal e rejeita JSON inválido", () => {

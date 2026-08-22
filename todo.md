@@ -89,3 +89,9 @@
 - [x] Implementar fluxo explícito de revisão das sugestões da IA, com edição/aprovação e status revisado
 - [x] Corrigir o indicador para usar exatamente o conjunto de entradas confirmadas do período selecionado e percentual consistente
 - [x] Adicionar testes de sucesso e falha da normalização do pipeline de extração fiscal por IA e persistência dos campos sugeridos
+
+- [x] Substituir prompts por modal interativo para revisão dos dados extraídos
+- [x] Validar CNPJ extraído com algoritmo de dígitos verificadores e alerta visual
+- [x] Documentar no guia técnico o modal, a validação de CNPJ e o fluxo de revisão
+- [x] Criar testes para CNPJ válido, inválido, repetido e máscara
+- [x] Atualizar o repositório privado no GitHub com a nova versão

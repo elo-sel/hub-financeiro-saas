@@ -433,3 +433,22 @@ Para a próxima etapa, a recomendação é manter o backend atual como fonte ofi
 [4]: https://firebase.google.com/docs/firestore "Cloud Firestore Documentation"
 
 [5]: https://firebase.google.com/docs/storage "Cloud Storage for Firebase Documentation"
+
+## 19. Revisão humana e validação de CNPJ
+
+Após o upload de um PDF fiscal, a aplicação solicita uma extração estruturada por IA. O resultado é persistido como sugestão nos campos `extracted*` e não altera automaticamente o lançamento financeiro. O usuário deve abrir **Revisar sugestão**, editar valor, data, fornecedor e documentos no formulário modal e salvar explicitamente a revisão.
+
+O CNPJ do emissor é validado no frontend e no backend por meio dos 14 dígitos e dos dois dígitos verificadores do algoritmo oficial de CNPJ. A máscara visual é aceita, mas caracteres não numéricos são ignorados na validação. CNPJs com todos os dígitos repetidos, quantidade incorreta de dígitos ou dígitos verificadores inválidos são bloqueados, exibindo alerta visual e impedindo o salvamento da revisão.
+
+A validação automática é uma verificação de consistência, não uma consulta de existência cadastral. Para confirmar situação cadastral, razão social ou autorização fiscal, implemente posteriormente uma integração oficial ou licenciada, mantendo a resposta externa separada da sugestão extraída pela IA.
+
+### Fluxo recomendado de revisão
+
+1. Anexe um PDF fiscal válido a uma nota vinculada.
+2. Aguarde o status **Sugestão pronta** ou verifique o status **Falhou**.
+3. Abra **Revisar sugestão** e confira todos os campos.
+4. Corrija o CNPJ caso o alerta visual seja exibido.
+5. Salve somente depois de conferir a origem do documento e os valores.
+6. Trate o status **Revisada** como confirmação operacional do usuário, não como autenticação fiscal externa.
+
+No ambiente Firebase, mantenha o PDF no Cloud Storage com regras privadas e grave no Firestore apenas metadados, estado da extração e campos sugeridos. A chamada ao modelo deve ocorrer no backend Node.js usando credenciais de servidor; nunca exponha chaves administrativas no cliente.
