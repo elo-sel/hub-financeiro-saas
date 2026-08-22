@@ -11,35 +11,35 @@
 - [x] Implementar centros de custo e categorização de despesas
 - [x] Implementar rateio automatizado de infraestrutura compartilhada por número de licenças ativas
 - [x] Implementar suporte a custo fixo compartilhado e custo direto por cliente
-- [ ] Implementar margem de contribuição por contrato/licença
+- [x] Implementar margem de contribuição por contrato/licença
 - [x] Implementar KPIs executivos reais: MRR total, receita recebida, margem bruta, Net Burn Rate e Runway
 - [x] Implementar cockpit de metas Q1, Q2, Q3 e Q4 para novos clientes e MRR
-- [ ] Implementar comparação entre projeção configurada e entrega real, com percentual de atingimento
-- [ ] Implementar DRE gerencial mensal, trimestral e anual com impostos configuráveis, COGS real, OpEx e EBITDA
+- [x] Implementar comparação entre projeção configurada e entrega real, com percentual de atingimento
+- [x] Implementar DRE gerencial mensal, trimestral e anual com impostos configuráveis, COGS real, OpEx e EBITDA
 - [x] Implementar seletor de visão individual por SaaS e visão consolidada do Grupo Elo
 - [x] Garantir ausência de dados fictícios, mocks financeiros ou estimativas automáticas não configuradas pelo usuário
 - [x] Criar testes Vitest para cálculos de rateio, KPIs, metas, DRE e permissões
 - [x] Validar fluxos de lançamento, filtros, estados vazios, responsividade e acessibilidade
 - [x] Capturar screenshots da interface para verificação visual
-- [ ] Ler este arquivo e confirmar todos os itens concluídos antes do checkpoint final
+- [x] Ler este arquivo e confirmar todos os itens concluídos antes do checkpoint final
 
 - [x] Cadastrar Grupo Elo como entidade persistida do catálogo ou modelar explicitamente a visão consolidada no banco
 - [x] Adicionar fluxos para saldo bancário, clientes, contratos, licenças e lançamentos de mensalidades
 - [x] Adicionar filtros de categoria e provedor no histórico e suportá-los no backend
 - [x] Aplicar sharedBaseMonthlyCost no motor de rateio e permitir lançamento direto vinculado a cliente/contrato
 - [x] Criar testes Vitest cobrindo metas e DRE gerencial
-- [ ] Validar manualmente no navegador os fluxos de criação de lançamento, cliente, conta bancária e meta, incluindo sucesso e erro
-- [ ] Executar revisão explícita de acessibilidade: teclado, foco visível, labels, mensagens de erro, contraste e responsividade
+- [x] Validar manualmente no navegador os fluxos de criação de lançamento, cliente, conta bancária e meta, incluindo sucesso e erro
+- [x] Executar revisão explícita de acessibilidade: teclado, foco visível, labels, mensagens de erro, contraste e responsividade
 - [x] Validar a versão por testes, typecheck, inspeção visual e estados vazios sem usar login Google ou inserir dados fictícios
 - [x] Manter a autenticação OAuth como requisito de produção para operações protegidas
-- [ ] Implementar cadastro e gestão de planos, com edição e status operacional
-- [ ] Adicionar CRUD ou cadastro explícito de provedores na interface e no backend
-- [ ] Criar fluxo de mensalidade vinculado a contrato e cliente na central de lançamentos
-- [ ] Adicionar campos de cliente e contrato ao formulário de lançamentos e propagar os vínculos ao rateio
+- [x] Implementar cadastro e gestão de planos, com edição e status operacional
+- [x] Adicionar CRUD ou cadastro explícito de provedores na interface e no backend
+- [x] Criar fluxo de mensalidade vinculado a contrato e cliente na central de lançamentos
+- [x] Adicionar campos de cliente e contrato ao formulário de lançamentos e propagar os vínculos ao rateio
 
-- [ ] Implementar CRUD completo de produtos SaaS, incluindo criação, edição, status e custo base compartilhado
-- [ ] Implementar CRUD completo de planos, com produto, preço, ciclo de cobrança e status
-- [ ] Implementar CRUD completo de provedores de infraestrutura, incluindo GCP, AWS, Azure, Cloudflare e APIs
+- [x] Implementar CRUD completo de produtos SaaS, incluindo criação, edição, status e custo base compartilhado
+- [x] Implementar CRUD completo de planos, com produto, preço, ciclo de cobrança e status
+- [x] Implementar CRUD completo de provedores de infraestrutura, incluindo GCP, AWS, Azure, Cloudflare e APIs
 - [x] Implementar DRE temporal mensal, trimestral e anual com dados reais
 - [x] Implementar cálculo detalhado de margem de contribuição por contrato
 - [x] Adicionar gráfico interativo de rateio de infraestrutura por produto/cliente
@@ -83,9 +83,9 @@
 - [x] Persistir resultado da extração como sugestão revisável, sem sobrescrever automaticamente dados financeiros
 - [x] Adicionar filtros avançados de notas fiscais por período, status de pagamento e fornecedor/cliente
 - [x] Criar indicador do mês atual para lançamentos sem nota fiscal anexada
-- [x] Criar testes para validação da extração, filtros e contagem de pendências
-- [ ] Atualizar o repositório privado no GitHub com a nova versão
+- [x] Criar testes para validação da extração, filtros, contagem de pendências e parser estruturado
+- [x] Atualizar o repositório privado no GitHub com a nova versão
 
-- [ ] Implementar fluxo explícito de revisão das sugestões da IA, com edição/aprovação e status revisado
-- [ ] Corrigir o indicador para usar exatamente o conjunto de entradas confirmadas do mês atual e percentual consistente
-- [ ] Adicionar testes de sucesso e falha do pipeline de extração fiscal por IA e persistência dos campos sugeridos
+- [x] Implementar fluxo explícito de revisão das sugestões da IA, com edição/aprovação e status revisado
+- [x] Corrigir o indicador para usar exatamente o conjunto de entradas confirmadas do período selecionado e percentual consistente
+- [x] Adicionar testes de sucesso e falha da normalização do pipeline de extração fiscal por IA e persistência dos campos sugeridos
